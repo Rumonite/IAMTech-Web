@@ -1,6 +1,6 @@
 # IAMTech — Project Plan
 
-Status: **planned, not started** (2026-09-29). Update the checklist at the bottom as work lands.
+Status: **first build done** (2026-09-29). Waiting on client details and admin user; see "Needed from client". Update the checklist at the bottom as work lands.
 
 ## Client brief
 
@@ -24,7 +24,7 @@ Documentation of changes and codebase information goes in `docs/` as Markdown.
 
 ## Branding
 
-- Logo: `public/60ddf363-a67f-49ef-bb7e-b106af0816ae.webp` (1254×1254). Rename to `public/logo.webp`.
+- Logo: `public/logo.webp` (1254×1254, 368 KB; also the favicon — a small resized copy would load faster).
 - Theme from the logo: near-black background, electric blue → purple accents, silver/white text.
 - Logo tagline: "Phone and Laptop Repair".
 - **Open concern:** the logo incorporates Apple's apple silhouette. Flag trademark risk to the client before launch.
@@ -35,11 +35,12 @@ Documentation of changes and codebase information goes in `docs/` as Markdown.
 index.html              → src/pages/Home.tsx    landing
 book/index.html         → src/pages/Book.tsx    booking form
 admin/index.html        → src/pages/Admin.tsx   login + appointment list
-src/components/         Header, Footer (shared)
-src/lib/supabase.ts     client from VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-src/lib/slots.ts        business hours → slot list (include one assert-based self-check)
+src/main.tsx            shared entry; data-page on #root picks the page
+src/components/Layout.tsx  Header + Footer (shared)
+src/lib/supabase.ts     client from VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY
+src/lib/business.ts     contact, services, hours, slotsFor() (self-check: scripts/check-slots.ts)
 src/index.css           theme tokens
-supabase/schema.sql     table, constraints, RLS, taken_slots() function
+supabase/schema.sql     table, constraints, RLS, is_admin(), taken_slots(from_ts, to_ts)
 public/logo.webp
 docs/README.md          architecture, setup, env vars, deploy
 docs/CHANGELOG.md       one entry per change
@@ -60,9 +61,9 @@ docs/CHANGELOG.md       one entry per change
 - **Unique partial index** on `slot_start where status <> 'cancelled'` — prevents double-booking even under concurrent submits.
 - **RLS:**
   - `anon` may `insert` only, and only with `status = 'pending'`.
-  - `authenticated` may `select` and `update`.
-- Public cannot read the table. A `security definer` function `taken_slots(day date)` returns only booked `slot_start` values so the booking page can hide taken slots without exposing customer data.
-- Disable public sign-ups in the Supabase dashboard; create the single admin user manually. "Authenticated" therefore means "admin".
+  - Admin (`app_metadata.role = 'admin'`) may `select` and `update`. Tightened from "any authenticated user" so a stray sign-up can't read customer data.
+- Public cannot read the table. A `security definer` function `taken_slots(from_ts, to_ts)` (a range, so the browser's local day boundaries are used) returns only booked `slot_start` values so the booking page can hide taken slots without exposing customer data.
+- Disable public sign-ups in the Supabase dashboard; create the admin user manually and set its role (steps in `docs/README.md`).
 
 ## Deliberately skipped (add when needed)
 
@@ -73,11 +74,14 @@ docs/CHANGELOG.md       one entry per change
 ## Needed from client
 
 - Services list (and prices, if shown), business hours, slot length, address, phone. Use placeholders until provided.
-- Supabase project URL + anon key; admin email.
+- ~~Admin email~~ done: `ampolconcepcion88@gmail.com` (also the public contact email). Contact phone `0965 553 3389`, SMS/WhatsApp only.
+- Still needed: services list, business hours, slot length, address.
 
 ## Build order / checklist
 
-- [ ] 1. Theme tokens, logo rename, Header/Footer, landing page, update `index.html` title/favicon
-- [ ] 2. `supabase/schema.sql`, `src/lib/supabase.ts`, `src/lib/slots.ts`, booking page
-- [ ] 3. Admin page (login, list, status actions)
-- [ ] 4. `docs/README.md`, `docs/CHANGELOG.md`, update `CLAUDE.md`; verify `npm run build` and `npm run lint`
+- [x] 1. Theme tokens, logo rename, Header/Footer, landing page, update `index.html` title/favicon
+- [x] 2. `supabase/schema.sql`, `src/lib/supabase.ts`, `src/lib/slots.ts`, booking page
+- [x] 3. Admin page (login, list, status actions)
+- [x] 4. `docs/README.md`, `docs/CHANGELOG.md`, update `CLAUDE.md`; verify `npm run build` and `npm run lint`
+- [ ] 5. Client: real business details in `src/lib/business.ts`, admin user created, sign-ups disabled, trademark question on the logo
+- [ ] 6. Deploy to Netlify/Vercel with the two env vars
