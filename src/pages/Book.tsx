@@ -352,6 +352,15 @@ function Ticket({ id, justBooked }: { id: string; justBooked: boolean }) {
                         Copy number
                       </button>
                     </div>
+                    {/* Customers usually read this on the phone they pay with, so they can't scan it: offer the image to upload in GCash. */}
+                    <div className="mt-3 flex flex-col items-center gap-4 rounded-lg border border-line bg-panel p-4 sm:flex-row sm:items-center">
+                      <img src={GCASH.qr} alt="GCash QR code for IAMTech" width="276" height="269" className="size-44 shrink-0 rounded-md bg-white object-contain p-1.5" />
+                      <div className="grid gap-2 text-sm">
+                        <p className="text-chrome">Or scan this QR in GCash.</p>
+                        <p className="text-mist">On this phone? Save the image, then in GCash tap QR and choose Upload QR.</p>
+                        <a href={GCASH.qr} download="IAMTech-GCash-QR.png" className="btn btn-ghost mt-1 sm:justify-self-start">Save QR image</a>
+                      </div>
+                    </div>
                   </li>
                   <li>Enter the reference number from your GCash receipt below.</li>
                 </ol>

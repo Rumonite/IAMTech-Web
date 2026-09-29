@@ -18,8 +18,9 @@ export const SERVICES = [
   { title: 'Software & data', text: 'OS reinstalls, virus removal, and data recovery.' },
 ]
 
-// Where customers send the downpayment. Placeholder: confirm the number and account name with the client.
-export const GCASH = { number: '0965 553 3389', name: 'IAMTech' }
+// Where customers send the downpayment: same number as the contact phone. `qr` is the account's InstaPay QR in public/.
+// ponytail: `name` is a placeholder until the client gives the registered GCash account name.
+export const GCASH = { number: CONTACT.phone, name: 'IAMTech', qr: '/gcash-qr.png' }
 
 // Share of the quote paid up front. Display only: the database computes the real amount
 // (`downpayment` column in supabase/schema.sql), so change both together.
