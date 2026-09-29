@@ -1,12 +1,12 @@
-// Business details shown across the site. Services, hours, and address are still placeholders.
+// Business details shown across the site. Services and hours are still placeholders.
 
-// Phone takes SMS and WhatsApp (not calls). WhatsApp needs the international form: PH +63, leading 0 dropped.
+// WhatsApp needs the international form: PH +63, leading 0 dropped.
 export const CONTACT = {
   phone: '0965 553 3389',
   sms: 'sms:09655533389',
   whatsapp: 'https://wa.me/639655533389',
   email: 'ampolconcepcion88@gmail.com',
-  address: '123 Main Street, Your City',
+  address: 'Saddul St. Purok 7, Salay, Echague, Isabela',
 }
 
 export const SERVICES = [
