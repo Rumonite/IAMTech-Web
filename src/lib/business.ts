@@ -18,6 +18,13 @@ export const SERVICES = [
   { title: 'Software & data', text: 'OS reinstalls, virus removal, and data recovery.' },
 ]
 
+// Where customers send the downpayment. Placeholder: confirm the number and account name with the client.
+export const GCASH = { number: '0965 553 3389', name: 'IAMTech' }
+
+// Share of the quote paid up front. Display only: the database computes the real amount
+// (`downpayment` column in supabase/schema.sql), so change both together.
+export const DOWNPAYMENT_RATE = 0.2
+
 export const DEVICES = ['Phone', 'Laptop', 'Tablet', 'Other']
 
 // Opening hours per weekday (0 = Sunday), as [open, close] in whole hours; null = closed.
