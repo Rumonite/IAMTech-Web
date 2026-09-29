@@ -250,7 +250,7 @@ function Appointments({ session }: { session: Session }) {
 
       {session.user.app_metadata.role !== 'admin' && (
         <p className="mt-6 rounded-xl border border-danger/50 bg-danger/10 p-4 text-danger" role="alert">
-          This account isn't an admin, so no appointments are shown. See docs/README.md.
+          This account isn't an admin, so no appointments are shown. See docs/DEVELOPMENT.md.
         </p>
       )}
 

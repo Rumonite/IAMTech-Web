@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-29 — Address, GCash QR, docs layout
+
+- Address set to Saddul St. Purok 7, Salay, Echague, Isabela. GCash number now reuses the contact phone.
+- GCash QR code (`public/gcash-qr.png`) on the customer's payment step, with a "Save QR image" button so customers paying from the same phone can upload it in GCash.
+- Root `README.md` now lists features only (replaces the Vite template). Technical docs moved from `docs/README.md` to `docs/DEVELOPMENT.md`. Account details (emails, password notes) removed from all docs.
+
 ## 2026-09-29 — "Appointment" instead of "book"
 
 - All visible text uses "appointment" instead of "book"/"booking", at the client's request: header button "Set an appointment" ("Appointment" on phones), "Set an appointment" page and CTA, "Review appointment", "Set appointment", "Cancel appointment", "How appointments work", page title and description. Staff modal's "Booked" date is now "Requested".
@@ -12,7 +18,7 @@
 - Removed the "We don't take calls" line from the home page.
 - Works on phones over plain http (LAN testing) and inside in-app browsers such as Messenger: booking ids fall back from `crypto.randomUUID` to `crypto.getRandomValues`, and Copy buttons fall back when the Clipboard API is blocked (new `src/lib/browser.ts`, checked by `scripts/check-uuid.ts` in `npm run check`). Toasts still show on phones without the popover API.
 - Mobile web pass on the customer pages at 320–414 px: the GCash number is a card with a "Copy number" button, "Decline quote" and "Copy link" are full buttons instead of small text links, footer links have larger tap areas, and the header fits on one line on the narrowest phones. Added an Apple touch icon for iPhone bookmarks.
-- Docs: phone testing with `npm run dev -- --host` (README, Mobile).
+- Docs: phone testing with `npm run dev -- --host` (`docs/DEVELOPMENT.md`, Mobile).
 
 ## 2026-09-29 — Redesign, admin status tabs, decline quote, GCash only
 
@@ -34,16 +40,14 @@
 - Admin: price column, "Send quote" on pending rows, "Confirm payment" on quoted rows (warns if no reference yet), "Copy customer link" to text to the customer.
 - GCash/Maya account numbers and names in `PAYMENT` (`src/lib/business.ts`) are placeholders until the client confirms them.
 
-## 2026-09-29 — Client contact details and admin account
+## 2026-09-29 — Client contact details
 
-- Contact phone `0965 553 3389` (SMS and WhatsApp only, so no `tel:` call links) and email `ampolconcepcion88@gmail.com` in `src/lib/business.ts`; shown on the home page and in the footer. WhatsApp link assumes a Philippine number (`+63`).
+- Contact phone `0965 553 3389` (SMS and WhatsApp, no `tel:` call links) and contact email in `src/lib/business.ts`; shown on the home page and in the footer. WhatsApp link assumes a Philippine number (`+63`).
 - Booking page messages say "message us by SMS or WhatsApp" instead of "call us".
-- Created the client's admin account (`ampolconcepcion88@gmail.com`) in Supabase.
 
-## 2026-09-29 — Admin login link
+## 2026-09-29 — Staff login link
 
 - Header (all pages) has a "Log in" link to `/admin/`, which shows the sign-in form and then the appointments dashboard.
-- Created the first admin account in Supabase (`app_metadata.role = 'admin'`).
 
 ## 2026-09-29 — First build
 
@@ -53,4 +57,4 @@
 - Business details, services, hours, and slot generation in `src/lib/business.ts` (placeholders until the client supplies real values), with `npm run check` self-check.
 - Supabase: `appointments` table, double-booking protection, RLS (public insert-only, admin read/update via `app_metadata.role = 'admin'`), `taken_slots()` function. Applied to the project as migration `appointments`; source in `supabase/schema.sql`.
 - Added `@supabase/supabase-js`. Env vars `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
-- Docs: `docs/README.md` (architecture, setup, admin user, deploy).
+- Docs: architecture, setup, and deploy (now `docs/DEVELOPMENT.md`).

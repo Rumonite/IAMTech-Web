@@ -1,6 +1,6 @@
-# IAMTech Web
+# Development
 
-Marketing site and appointment booking for IAMTech phone and laptop repair.
+How the IAMTech site is built and run. Features are listed in the root `README.md`; decisions and progress are in `PLAN.md` and `CHANGELOG.md`.
 
 - `/` — landing page (hero, services, hours, contact)
 - `/book/` — customers pick a date and a free time slot and submit their details
@@ -39,6 +39,7 @@ scripts/check-uuid.ts      self-check for the uuid() fallback (npm run check)
 public/logo.webp           original logo (source for the files below)
 public/logo-800.webp       home page logo
 public/logo-96.webp        header logo and favicon
+public/gcash-qr.png        GCash (InstaPay) QR shown on the payment step
 public/apple-touch-icon.png  icon iPhones show for bookmarks
 ```
 
@@ -78,8 +79,8 @@ Schema is in `supabase/schema.sql` (applied to the project as migrations `appoin
 Admin tabs use the client's words; one differs from the database value: **Accepted** = `confirmed`.
 
 1. Customer fills in the form, reviews a summary, and confirms: status **pending**. They land on their repair ticket `/book/?id=<id>`.
-2. Admin opens the booking, enters a price (the modal previews the downpayment) and confirms **Send quote**: status **quoted**. The database computes `downpayment` as 20% of `price` (generated column), so it can't be set wrong. Admin uses **Text link** (opens SMS with the link filled in, on phones) or **Copy link** to send the customer their ticket.
-3. Customer sends the downpayment to the GCash account in `GCASH` (`src/lib/business.ts`) and submits the reference number. Or they **decline the quote**: status **declined**, the slot is freed, and it shows under the admin's Cancelled tab. Declining isn't offered once a reference is submitted (there's money to refund, so they message the shop).
+2. Admin opens the booking, enters a price (the modal previews the downpayment) and confirms **Send quote**: status **quoted**. The database computes `downpayment` as 20% of `price` (generated column), so it can't be set wrong. Admin uses **Copy customer link** and sends it to the customer.
+3. Customer sends the downpayment to the GCash account in `GCASH` (`src/lib/business.ts`), by number or by scanning or uploading the QR code (`public/gcash-qr.png`), and submits the reference number. Or they **decline the quote**: status **declined**, the slot is freed, and it shows under the admin's Cancelled tab. Declining isn't offered once a reference is submitted (there's money to refund, so they message the shop).
 4. Admin checks the reference in GCash and confirms **Confirm payment**: status **confirmed** (Accepted). The balance is paid at the shop.
 5. After the repair: **Mark done**. **Cancel appointment** is available until then (refunds are manual); cancelling frees the slot.
 
@@ -96,26 +97,18 @@ The slot stays reserved while pending or quoted. To change the downpayment rate,
 - **Stale admin actions:** admin updates only apply if the booking is still in the status the admin was looking at; otherwise nothing changes and the admin sees "changed in the meantime".
 - **Admin:** only a signed-in user whose `app_metadata.role` is `admin` can read and update appointments. `app_metadata` can only be set with the service role, so even if someone manages to sign up, they see nothing.
 
-### Admin accounts
+### Creating an admin user
 
-| Email | Who |
-|-------|-----|
-| `ampolconcepcion88@gmail.com` | Client (business owner) |
-| `mitzignacio2252@gmail.com` | Developer |
+Public sign-ups are turned off in Supabase (Authentication → Sign In / Providers), so admins are created by hand. Passwords are managed in Supabase → Authentication → Users, never in the repo.
 
-Passwords are not stored in the repo. Change a password in Supabase → Authentication → Users. The client's initial password was shared in chat and is weak; change it before launch.
-
-### Creating another admin user
-
-1. Supabase dashboard → Authentication → Sign In / Providers: turn **off** "Allow new users to sign up".
-2. Authentication → Users → Add user → create the admin's email and password (auto-confirm).
-3. SQL editor:
+1. Authentication → Users → Add user → create the admin's email and password (auto-confirm).
+2. SQL editor:
    ```sql
    update auth.users
    set raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}'
    where email = 'ADMIN_EMAIL_HERE';
    ```
-4. Sign in at `/admin/` (sign out and in again if already signed in, so the new role is in the session).
+3. Sign in at `/admin/` (sign out and in again if already signed in, so the new role is in the session).
 
 ### Time zones
 

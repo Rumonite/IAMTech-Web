@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-IAMTech repair site: landing (`/`), booking (`/book/`), admin (`/admin/`), backed by Supabase. First build is done; see `docs/PLAN.md` for decisions and the remaining checklist, and `docs/README.md` for architecture, env vars, database security, and admin setup.
+IAMTech repair site: landing (`/`), booking (`/book/`), admin (`/admin/`), backed by Supabase. First build is done; see `docs/PLAN.md` for decisions and the remaining checklist, and `docs/DEVELOPMENT.md` for architecture, env vars, database security, and admin setup.
 
 ## Documentation
 
-The client wants changes and codebase information documented as Markdown in `docs/`. Keep `docs/PLAN.md` current, log each change in `docs/CHANGELOG.md`, and describe architecture/setup in `docs/README.md`.
+The client wants changes and codebase information documented as Markdown in `docs/`. Keep `docs/PLAN.md` current, log each change in `docs/CHANGELOG.md`, and describe architecture/setup in `docs/DEVELOPMENT.md`. The root `README.md` only lists features: update it when features change, and keep progress notes out of it. No docs may include user account details (emails, passwords).
 
 ## Commands
 
